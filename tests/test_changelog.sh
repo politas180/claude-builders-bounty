@@ -29,7 +29,7 @@ git tag v1.0.0
 
 echo "feature" >> app.txt
 git add app.txt
-git commit -q -m "feat: add OAuth login"
+git commit -q -m "feat(auth): add OAuth login"
 
 echo "fix" >> app.txt
 git add app.txt
@@ -54,5 +54,21 @@ assert_contains CHANGELOG.md "### Changed"
 assert_contains CHANGELOG.md "- clarify setup instructions"
 assert_contains CHANGELOG.md "### Removed"
 assert_contains CHANGELOG.md "- remove deprecated API"
+
+NO_TAG_DIR="$(mktemp -d)"
+cd "$NO_TAG_DIR"
+git init -q
+git config user.email "test@example.com"
+git config user.name "Test User"
+
+echo "first" > app.txt
+git add app.txt
+git commit -q -m "add first public command"
+
+"$ROOT_DIR/changelog.sh" RELEASE_NOTES.md
+
+assert_contains RELEASE_NOTES.md "Changes from all commits."
+assert_contains RELEASE_NOTES.md "### Added"
+assert_contains RELEASE_NOTES.md "- add first public command"
 
 echo "changelog generation test passed"

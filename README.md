@@ -43,6 +43,9 @@ Create a structured `CHANGELOG.md` from commits since the latest git tag:
 3. Commit the changelog when it looks right.
 
 The script categorizes commit subjects into `Added`, `Fixed`, `Changed`, and `Removed`.
+It supports conventional commit scopes like `feat(auth): add OAuth login`, ignores merge
+commits, and falls back to all commits when no git tag exists. `SKILL.md` is included for
+Claude Code users who prefer a skill-based workflow.
 
 Sample output from the test repository:
 

@@ -24,8 +24,7 @@ declare -a removed=()
 
 clean_subject() {
   local subject="$1"
-  subject="${subject#*: }"
-  subject="${subject#*:}"
+  subject="$(printf '%s\n' "$subject" | sed -E 's/^[[:alnum:]_-]+(\([^)]+\))?!?:[[:space:]]*//')"
   subject="${subject#- }"
   printf '%s\n' "$subject"
 }
@@ -49,9 +48,9 @@ while IFS= read -r subject; do
 
   normalized="$(printf '%s' "$subject" | tr '[:upper:]' '[:lower:]')"
   case "$normalized" in
-    feat:*|feature:*|add:*|added:*|add\ *) append_item added "$subject" ;;
-    fix:*|fixed:*|bugfix:*|bug:*|repair:*|fix\ *) append_item fixed "$subject" ;;
-    remove:*|removed:*|delete:*|deleted:*|drop:*|dropped:*|remove\ *) append_item removed "$subject" ;;
+    feat:*|feat\(*|feature:*|feature\(*|add:*|added:*|add\ *) append_item added "$subject" ;;
+    fix:*|fix\(*|fixed:*|bugfix:*|bugfix\(*|bug:*|repair:*|fix\ *) append_item fixed "$subject" ;;
+    remove:*|remove\(*|removed:*|delete:*|delete\(*|deleted:*|drop:*|drop\(*|dropped:*|remove\ *) append_item removed "$subject" ;;
     *) append_item changed "$subject" ;;
   esac
 done <<< "$commit_lines"
